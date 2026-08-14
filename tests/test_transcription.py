@@ -3,6 +3,8 @@ import struct
 import wave
 from pathlib import Path
 
+import pytest
+
 from bumusic.transcription import transcribe_audio
 
 NOTES = [
@@ -73,3 +75,11 @@ def test_transcription_preserves_leading_silence_in_original_timing(tmp_path: Pa
 
     assert [event.name for event in events] == ["A4"]
     assert events[0].start_seconds >= 0.35
+
+
+def test_transcription_rejects_non_finite_bpm(tmp_path: Path) -> None:
+    source = tmp_path / "scale.wav"
+    write_scale(source)
+
+    with pytest.raises(ValueError, match="finite"):
+        transcribe_audio(source, bpm=math.inf)

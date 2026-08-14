@@ -59,7 +59,7 @@ def test_cli_reports_version() -> None:
         text=True,
     )
     assert completed.returncode == 0
-    assert completed.stdout.strip() == "bumusic 0.1.0"
+    assert completed.stdout.strip() == "bumusic 0.1.1"
 
 
 def test_cli_reports_invalid_notes_json_without_traceback(tmp_path: Path) -> None:
@@ -68,6 +68,30 @@ def test_cli_reports_invalid_notes_json_without_traceback(tmp_path: Path) -> Non
 
     completed = subprocess.run(
         [sys.executable, "-m", "bumusic.cli", "synthesize", str(invalid)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    assert completed.stderr.startswith("bumusic:")
+    assert "Traceback" not in completed.stderr
+
+
+def test_cli_rejects_non_finite_bpm_without_traceback(tmp_path: Path) -> None:
+    source = tmp_path / "a4.wav"
+    write_tone(source)
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "bumusic.cli",
+            "transcribe",
+            str(source),
+            "--bpm",
+            "inf",
+        ],
         check=False,
         capture_output=True,
         text=True,

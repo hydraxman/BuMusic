@@ -1,5 +1,6 @@
 """Monophonic audio transcription using the frozen Balanced pYIN profile."""
 
+import math
 from pathlib import Path
 
 import librosa
@@ -44,8 +45,10 @@ def transcribe_audio(
     source = Path(audio_path)
     if not source.is_file():
         raise FileNotFoundError(source)
-    if bpm <= 0:
-        raise ValueError("bpm must be greater than zero")
+    if isinstance(bpm, bool) or not isinstance(bpm, (int, float)):
+        raise TypeError("bpm must be a number")
+    if not math.isfinite(float(bpm)) or bpm <= 0:
+        raise ValueError("bpm must be a finite number greater than zero")
 
     signal, sample_rate = librosa.load(source, sr=profile.sample_rate, mono=True)
     signal, trim_indices = librosa.effects.trim(signal, top_db=profile.trim_top_db)
