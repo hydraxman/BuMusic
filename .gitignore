@@ -1,0 +1,39 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments and local dependencies
+.venv/
+venv/
+env/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Generated audio and score artifacts
+bumusic-output/
+.demo/
+*.wav
+*.mp3
+*.ogg
+*.m4a
+*.mid
+*.midi
+*.musicxml
+*.mxl
+*.svg
+
+# Keep explicitly tracked documentation assets
+!docs/**/*.svg
+!examples/**/*.musicxml

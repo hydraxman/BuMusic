@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bumusic"
+version = "0.1.0"
+description = "Offline monophonic voice-to-score transcription with original-timing playback"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "hydraxman" }]
+keywords = ["audio", "pitch", "pyin", "musicxml", "midi", "sheet-music"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+dependencies = [
+  "librosa==1.0.0",
+  "numpy>=2.1,<3",
+  "scipy>=1.15,<2",
+  "soundfile>=0.13,<1",
+  "verovio>=6.2,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "pytest>=9.0.3,<10",
+  "ruff>=0.9,<1",
+]
+
+[project.scripts]
+bumusic = "bumusic.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/hydraxman/BuMusic"
+Repository = "https://github.com/hydraxman/BuMusic"
+Issues = "https://github.com/hydraxman/BuMusic/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
