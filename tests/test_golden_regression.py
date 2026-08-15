@@ -22,8 +22,8 @@ def test_selected_voice_transcription_matches_golden_baseline(fixture_id: str) -
     expected = json.loads((fixture / "expected-notes.json").read_text(encoding="utf-8"))
 
     assert hashlib.sha256(audio.read_bytes()).hexdigest() == metadata["audio_sha256"]
-    expected_bytes = (fixture / "expected-notes.json").read_bytes()
-    assert hashlib.sha256(expected_bytes).hexdigest() == metadata["expected_notes_sha256"]
+    expected_canonical = json.dumps(expected, indent=2).encode("utf-8")
+    assert hashlib.sha256(expected_canonical).hexdigest() == metadata["expected_notes_sha256"]
     assert len(expected) == metadata["expected_note_count"]
     actual = [asdict(event) for event in transcribe_audio(audio, bpm=metadata["bpm"])]
 

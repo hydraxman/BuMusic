@@ -37,7 +37,7 @@ CI重新运行`transcribe_audio()`并检查：
 - 音名序列；
 - `duration_beats`；
 - 输入音频SHA256；
-- 回归基线JSON SHA256。
+- 规范化后的回归基线JSON SHA256（忽略平台换行符差异）。
 
 ### 容差一致
 
