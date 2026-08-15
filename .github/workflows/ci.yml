@@ -20,7 +20,11 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.13"
           - os: macos-latest
+            python-version: "3.12"
+          - os: macos-latest
             python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.12"
           - os: windows-latest
             python-version: "3.13"
     runs-on: ${{ matrix.os }}
@@ -41,37 +45,4 @@ jobs:
       - name: Build
         run: python -m build
       - name: Clean wheel install and real transcription smoke test
-        shell: bash
-        run: |
-          python - <<'PY'
-          import os
-          import subprocess
-          import sys
-          import tempfile
-          import venv
-          from pathlib import Path
-
-          wheel = next(Path("dist").glob("bumusic-*.whl"))
-          root = Path(tempfile.mkdtemp(prefix="bumusic-wheel-test-"))
-          environment = root / "venv"
-          venv.EnvBuilder(with_pip=True).create(environment)
-          bin_dir = environment / ("Scripts" if os.name == "nt" else "bin")
-          python = bin_dir / ("python.exe" if os.name == "nt" else "python")
-          cli = bin_dir / ("bumusic.exe" if os.name == "nt" else "bumusic")
-          subprocess.run([python, "-m", "pip", "install", str(wheel.resolve())], check=True)
-          audio = root / "c-major.wav"
-          output = root / "result"
-          subprocess.run([sys.executable, "scripts/generate_demo.py", str(audio)], check=True)
-          subprocess.run(
-              [cli, "transcribe", str(audio), "--out", str(output), "--bpm", "120"],
-              check=True,
-          )
-          expected = {
-              "notes.json",
-              "score.musicxml",
-              "original-timing.mid",
-              "score.svg",
-              "reconstructed-original-timing.wav",
-          }
-          assert expected <= {path.name for path in output.iterdir()}
-          PY
+        run: python scripts/wheel_smoke.py
