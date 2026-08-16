@@ -35,6 +35,91 @@ def midi_name(midi: int) -> str:
     return f"{step}{'#' if alter else ''}{midi // 12 - 1}"
 
 
+def _minimum_frames(
+    seconds: float,
+    *,
+    sample_rate: int,
+    hop_length: int,
+    floor: int = 1,
+) -> int:
+    return max(floor, math.ceil(seconds * sample_rate / hop_length))
+
+
+def _detect_onset_frames(
+    onset_envelope: np.ndarray,
+    *,
+    sample_rate: int,
+    hop_length: int,
+    delta: float,
+) -> np.ndarray:
+    return librosa.onset.onset_detect(
+        onset_envelope=onset_envelope,
+        sr=sample_rate,
+        hop_length=hop_length,
+        units="frames",
+        normalize=True,
+        delta=delta,
+        wait=0,
+        backtrack=False,
+    )
+
+
+def _split_runs_at_onsets(
+    runs: list[tuple[int, int, int]],
+    onset_frames: np.ndarray,
+    *,
+    min_frames: int,
+    min_separation_frames: int,
+) -> list[tuple[int, int, int]]:
+    split_runs: list[tuple[int, int, int]] = []
+    boundary_guard = max(min_frames, min_separation_frames)
+    for start, end, midi in runs:
+        boundaries = [start]
+        first = int(np.searchsorted(onset_frames, start + boundary_guard, side="left"))
+        last = int(np.searchsorted(onset_frames, end - boundary_guard, side="right"))
+        for onset in onset_frames[first:last]:
+            frame = int(onset)
+            if frame - boundaries[-1] < boundary_guard:
+                continue
+            boundaries.append(frame)
+        boundaries.append(end)
+        split_runs.extend(
+            (left, right, midi)
+            for left, right in zip(boundaries, boundaries[1:], strict=False)
+        )
+    return split_runs
+
+
+def _onsets_with_rms_dips(
+    onset_frames: np.ndarray,
+    rms_envelope: np.ndarray,
+    *,
+    context_frames: int,
+    max_dip_ratio: float,
+) -> np.ndarray:
+    accepted: list[int] = []
+    context_frames = max(3, context_frames)
+    for onset in onset_frames:
+        frame = int(onset)
+        before = rms_envelope[max(0, frame - context_frames) : max(0, frame - 2)]
+        around = rms_envelope[
+            max(0, frame - 2) : min(len(rms_envelope), frame + context_frames)
+        ]
+        after = rms_envelope[
+            min(len(rms_envelope), frame + context_frames) : min(
+                len(rms_envelope), frame + 2 * context_frames - 2
+            )
+        ]
+        if not before.size or not around.size or not after.size:
+            continue
+        reference_rms = min(float(np.median(before)), float(np.median(after)))
+        if reference_rms <= 0:
+            continue
+        if float(np.min(around)) <= reference_rms * max_dip_ratio:
+            accepted.append(frame)
+    return np.asarray(accepted, dtype=int)
+
+
 def transcribe_audio(
     audio_path: str | Path,
     *,
@@ -89,7 +174,7 @@ def transcribe_audio(
         if sequence[index] is None and sequence[index - 1] == sequence[index + 1]:
             sequence[index] = sequence[index - 1]
 
-    min_frames = max(
+    run_min_frames = max(
         2,
         int(profile.min_note_seconds * sample_rate / profile.hop_length),
     )
@@ -100,7 +185,7 @@ def transcribe_audio(
     for index in range(1, len(sequence) + 1):
         value = sequence[index] if index < len(sequence) else sentinel
         if value != current:
-            if current is not None and index - start >= min_frames:
+            if current is not None and index - start >= run_min_frames:
                 runs.append((start, index, int(current)))
             start, current = index, value
 
@@ -118,6 +203,47 @@ def transcribe_audio(
             merged[-1] = (merged[-1][0], run[1], run[2])
         else:
             merged.append(run)
+
+    onset_envelope = librosa.onset.onset_strength(
+        y=signal,
+        sr=sample_rate,
+        hop_length=profile.hop_length,
+    )
+    onset_wait_frames = _minimum_frames(
+        profile.onset_min_separation_seconds,
+        sample_rate=sample_rate,
+        hop_length=profile.hop_length,
+    )
+    split_min_frames = _minimum_frames(
+        profile.min_note_seconds,
+        sample_rate=sample_rate,
+        hop_length=profile.hop_length,
+        floor=2,
+    )
+    onset_frames = _detect_onset_frames(
+        onset_envelope,
+        sample_rate=sample_rate,
+        hop_length=profile.hop_length,
+        delta=profile.onset_delta,
+    )
+    rms_envelope = librosa.feature.rms(
+        y=signal,
+        frame_length=profile.hop_length * 2,
+        hop_length=profile.hop_length,
+        center=True,
+    )[0]
+    onset_frames = _onsets_with_rms_dips(
+        onset_frames,
+        rms_envelope,
+        context_frames=onset_wait_frames // 2,
+        max_dip_ratio=profile.onset_rms_dip_ratio,
+    )
+    merged = _split_runs_at_onsets(
+        merged,
+        onset_frames,
+        min_frames=split_min_frames,
+        min_separation_frames=onset_wait_frames,
+    )
 
     events: list[NoteEvent] = []
     for start_frame, end_frame, midi in merged:
