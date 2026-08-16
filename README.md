@@ -31,7 +31,7 @@ WAV/FLAC/OGG（MP3/M4A取决于系统解码后端）
 - 分离“原始秒时间”和“谱面量化时间”；
 - original timing反向播放，避免BPM量化改变原始旋律轮廓；
 - 完全离线，不上传录音；
-- Linux、macOS、Windows上的Python 3.12/3.13自动测试和wheel构建。
+- Linux/Python 3.12及macOS、Windows/Python 3.13自动测试和wheel构建。
 
 ## 快速开始
 
@@ -43,13 +43,23 @@ WAV/FLAC/OGG（MP3/M4A取决于系统解码后端）
 
 ### 从源码安装
 
+BuMusic提供不依赖Bash、Make或PowerShell脚本的统一Python任务入口。Windows PowerShell或CMD：
+
+```powershell
+git clone https://github.com/hydraxman/BuMusic.git
+cd BuMusic
+py -3.12 scripts/dev.py setup
+```
+
+macOS或Linux：
+
 ```bash
 git clone https://github.com/hydraxman/BuMusic.git
 cd BuMusic
-./scripts/setup.sh
+python3 scripts/dev.py setup
 ```
 
-也可以手动安装：
+也可以手动安装。macOS或Linux：
 
 ```bash
 python3 -m venv .venv
@@ -57,7 +67,7 @@ python3 -m venv .venv
 .venv/bin/pip install -e '.[dev]'
 ```
 
-Windows PowerShell对应命令：
+Windows PowerShell：
 
 ```powershell
 py -3.12 -m venv .venv
@@ -71,8 +81,16 @@ py -3.12 -m venv .venv
 
 ### 从人声生成完整结果
 
+macOS或Linux：
+
 ```bash
 .venv/bin/bumusic transcribe input.ogg --out bumusic-output --bpm 120
+```
+
+Windows PowerShell或CMD：
+
+```powershell
+.venv\Scripts\python -m bumusic.cli transcribe input.ogg --out bumusic-output --bpm 120
 ```
 
 输出目录：
@@ -90,11 +108,19 @@ bumusic-output/
 
 ### 单独反向播放notes.json
 
-默认`basic`音色：
+默认`basic`音色。macOS或Linux：
 
 ```bash
 .venv/bin/bumusic synthesize \
   bumusic-output/notes.json \
+  --output reconstructed.wav
+```
+
+Windows PowerShell：
+
+```powershell
+.venv\Scripts\python -m bumusic.cli synthesize `
+  bumusic-output\notes.json `
   --output reconstructed.wav
 ```
 
@@ -176,13 +202,21 @@ violin-g-major.wav
 .venv/bin/bumusic --version
 ```
 
+Windows：
+
+```powershell
+.venv\Scripts\python -m bumusic.cli --version
+```
+
 ## 离线演示
 
 演示脚本会合成`C4 D4 E4 F4 G4 A4 B4 C5`，然后运行完整转谱流程：
 
 ```bash
-./scripts/demo.sh
+python3 scripts/dev.py demo
 ```
+
+Windows使用`py -3.12 scripts/dev.py demo`。
 
 结果写入`.demo/result/`。`.demo/`不会提交到Git。
 
@@ -226,6 +260,8 @@ BuMusic/
 │   └── synthesis.py       # 多音色original timing反向合成
 ├── tests/                 # 参数、识别、导出、合成和CLI测试
 ├── scripts/
+│   ├── dev.py             # Windows/macOS/Linux统一任务入口
+│   ├── wheel_smoke.py     # 干净wheel安装与真实转录冒烟
 │   ├── setup.sh           # 创建环境和安装依赖
 │   ├── test.sh            # lint + tests
 │   ├── build.sh           # 构建wheel并验证安装
@@ -241,13 +277,25 @@ BuMusic/
 
 ## 测试与构建
 
-运行质量门禁：
+统一任务入口支持Windows PowerShell、CMD、macOS和Linux：
+
+| 任务 | Windows | macOS / Linux |
+|---|---|---|
+| 安装开发环境 | `py -3.12 scripts/dev.py setup` | `python3 scripts/dev.py setup` |
+| lint + 测试 | `py -3.12 scripts/dev.py test` | `python3 scripts/dev.py test` |
+| 构建wheel | `py -3.12 scripts/dev.py build` | `python3 scripts/dev.py build` |
+| 离线演示 | `py -3.12 scripts/dev.py demo` | `python3 scripts/dev.py demo` |
+| 清理产物 | `py -3.12 scripts/dev.py clean` | `python3 scripts/dev.py clean` |
+
+`scripts/*.sh`只是macOS/Linux和Git Bash的便捷包装，不是Windows前置条件；它们内部也调用同一个`scripts/dev.py`。Windows不需要安装WSL、Git Bash或GNU Make。
+
+在macOS或Linux上仍可运行原有质量门禁：
 
 ```bash
 ./scripts/test.sh
 ```
 
-等价命令：
+底层等价命令：
 
 ```bash
 .venv/bin/ruff check src tests scripts
@@ -257,7 +305,7 @@ BuMusic/
 构建wheel并重新安装验证：
 
 ```bash
-./scripts/build.sh
+python3 scripts/dev.py build
 ```
 
 产物位于`dist/`：
@@ -267,7 +315,7 @@ dist/bumusic-0.2.0-py3-none-any.whl
 dist/bumusic-0.2.0.tar.gz
 ```
 
-常用Make目标：
+macOS/Linux或已安装GNU Make的环境仍可使用Make目标：
 
 ```bash
 make setup
@@ -278,7 +326,7 @@ make build
 make clean
 ```
 
-GitHub Actions会在Linux、macOS和Windows的Python 3.12/3.13上执行安装、Ruff、pytest、wheel构建，并从干净wheel运行一次真实音阶转录。
+GitHub Actions会在Linux/Python 3.12及macOS、Windows/Python 3.13上执行安装、Ruff、pytest、wheel构建，并在各系统的原生默认shell中调用跨平台Python脚本，从干净wheel运行一次真实音阶转录。Windows任务不再借用Bash。
 
 ### 真人哼唱黄金回归集
 

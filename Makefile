@@ -1,19 +1,21 @@
+PYTHON ?= python3
+
 .PHONY: setup test lint build demo clean
 
 setup:
-	./scripts/setup.sh
+	$(PYTHON) scripts/dev.py setup
 
 test:
-	.venv/bin/python -m pytest
+	$(PYTHON) scripts/dev.py test
 
 lint:
-	.venv/bin/ruff check src tests scripts
+	$(PYTHON) scripts/dev.py lint
 
 build:
-	./scripts/build.sh
+	$(PYTHON) scripts/dev.py build
 
 demo:
-	./scripts/demo.sh
+	$(PYTHON) scripts/dev.py demo
 
 clean:
-	.venv/bin/python -c "from pathlib import Path; import shutil; [shutil.rmtree(p, ignore_errors=True) for p in (Path('build'), Path('dist'), Path('.demo'))]"
+	$(PYTHON) scripts/dev.py clean

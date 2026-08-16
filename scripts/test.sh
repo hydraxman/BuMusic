@@ -4,5 +4,5 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-.venv/bin/ruff check src tests scripts
-PYTHONPATH=src .venv/bin/python -m pytest
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+exec "$PYTHON_BIN" scripts/dev.py test
