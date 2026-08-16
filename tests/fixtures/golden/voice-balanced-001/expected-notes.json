@@ -1,0 +1,142 @@
+[
+  {
+    "midi": 49,
+    "name": "C#3",
+    "pitch_hz": 136.9994584594705,
+    "cents_offset": -20.000000000000284,
+    "start_seconds": 0.5398639455782313,
+    "end_seconds": 0.6965986394557823,
+    "duration_beats": 0.25,
+    "confidence": 0.7571601330199091
+  },
+  {
+    "midi": 52,
+    "name": "E3",
+    "pitch_hz": 166.72882231614375,
+    "cents_offset": 19.999999999999574,
+    "start_seconds": 0.7662585034013606,
+    "end_seconds": 1.0274829931972789,
+    "duration_beats": 0.5,
+    "confidence": 0.8266685594724994
+  },
+  {
+    "midi": 48,
+    "name": "C3",
+    "pitch_hz": 134.645889763512,
+    "cents_offset": 49.99999999999929,
+    "start_seconds": 1.1145578231292517,
+    "end_seconds": 1.18421768707483,
+    "duration_beats": 0.25,
+    "confidence": 0.42606232904328173
+  },
+  {
+    "midi": 51,
+    "name": "D#3",
+    "pitch_hz": 155.56349186104035,
+    "cents_offset": -1.4210854715202004e-12,
+    "start_seconds": 1.242267573696145,
+    "end_seconds": 1.3990022675736962,
+    "duration_beats": 0.25,
+    "confidence": 0.6860828109301792
+  },
+  {
+    "midi": 50,
+    "name": "D3",
+    "pitch_hz": 143.478727674212,
+    "cents_offset": -40.00000000000057,
+    "start_seconds": 1.4918820861678004,
+    "end_seconds": 1.6312018140589568,
+    "duration_beats": 0.25,
+    "confidence": 0.6159498854580678
+  },
+  {
+    "midi": 48,
+    "name": "C3",
+    "pitch_hz": 127.82501456536231,
+    "cents_offset": -40.00000000000057,
+    "start_seconds": 1.7705215419501135,
+    "end_seconds": 1.8866213151927438,
+    "duration_beats": 0.25,
+    "confidence": 0.5485250542599845
+  },
+  {
+    "midi": 48,
+    "name": "C3",
+    "pitch_hz": 128.93734577011767,
+    "cents_offset": -25.0,
+    "start_seconds": 2.1304308390022677,
+    "end_seconds": 2.1884807256235828,
+    "duration_beats": 0.25,
+    "confidence": 0.7919143462462044
+  },
+  {
+    "midi": 50,
+    "name": "D3",
+    "pitch_hz": 143.478727674212,
+    "cents_offset": -40.00000000000057,
+    "start_seconds": 2.269750566893424,
+    "end_seconds": 2.3103854875283445,
+    "duration_beats": 0.25,
+    "confidence": 0.6860828109301792
+  },
+  {
+    "midi": 49,
+    "name": "C#3",
+    "pitch_hz": 140.6071725916473,
+    "cents_offset": 24.99999999999929,
+    "start_seconds": 2.3103854875283445,
+    "end_seconds": 2.403265306122449,
+    "duration_beats": 0.25,
+    "confidence": 0.6860828109301792
+  },
+  {
+    "midi": 47,
+    "name": "B2",
+    "pitch_hz": 124.90548719779643,
+    "cents_offset": 19.999999999998863,
+    "start_seconds": 2.5309750566893423,
+    "end_seconds": 2.583219954648526,
+    "duration_beats": 0.25,
+    "confidence": 0.4260623290432818
+  },
+  {
+    "midi": 48,
+    "name": "C3",
+    "pitch_hz": 127.08879665595002,
+    "cents_offset": -50.0,
+    "start_seconds": 2.583219954648526,
+    "end_seconds": 2.6238548752834467,
+    "duration_beats": 0.25,
+    "confidence": 0.8266685594724995
+  },
+  {
+    "midi": 45,
+    "name": "A2",
+    "pitch_hz": 113.22324603078408,
+    "cents_offset": 49.99999999999929,
+    "start_seconds": 2.7573696145124718,
+    "end_seconds": 2.8792743764172335,
+    "duration_beats": 0.25,
+    "confidence": 0.8266685594724996
+  },
+  {
+    "midi": 50,
+    "name": "D3",
+    "pitch_hz": 147.68297530582893,
+    "cents_offset": 9.999999999999432,
+    "start_seconds": 2.995374149659864,
+    "end_seconds": 3.1230839002267574,
+    "duration_beats": 0.25,
+    "confidence": 0.8266685594724994
+  },
+  {
+    "midi": 48,
+    "name": "C3",
+    "pitch_hz": 128.56549734173697,
+    "cents_offset": -30.000000000000426,
+    "start_seconds": 3.2624036281179136,
+    "end_seconds": 3.871927437641723,
+    "duration_beats": 1.25,
+    "confidence": 0.7571601330199094
+  }
+]

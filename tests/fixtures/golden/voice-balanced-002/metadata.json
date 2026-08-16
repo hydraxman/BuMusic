@@ -1,0 +1,19 @@
+{
+  "fixture_id": "voice-balanced-002",
+  "description": "User-selected long monophonic humming regression fixture",
+  "approval_quote": "录音一和录音三是我们要的这个哼唱版本……最终黄金测试集一共有两段录音，然后就采纳你刚才说的一和三，第一的第四版本，就这两个就好",
+  "approval_kind": "selected_regression_baseline_from_the_only_presented_balanced_candidate",
+  "per_event_manual_pitch_review_claimed": false,
+  "approved_at": "2026-08-15",
+  "approved_for_public_repository_regression_test": true,
+  "audio_sha256": "2d435554598f2cc25ccb38d4f67fc6180f83b23c9827ea2463181f95a9a09363",
+  "expected_notes_sha256": "65cca0a4430b14c97ee9033683273b9b985215ac8bd931a9b850467691ac456d",
+  "bpm": 120.0,
+  "profile": "BALANCED_PROFILE",
+  "expected_note_count": 66,
+  "relative_timing_tolerance_seconds": 0.012,
+  "pitch_tolerance_hz": 0.01,
+  "cents_tolerance": 0.1,
+  "confidence_tolerance": 0.01,
+  "absolute_leading_silence_is_non_blocking": true
+}
