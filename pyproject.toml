@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bumusic"
-version = "0.1.1"
+version = "0.2.0"
 description = "Offline monophonic voice-to-score transcription with original-timing playback"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -48,6 +48,9 @@ where = ["src"]
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
+markers = [
+  "golden: run user-selected real-audio transcription regression fixtures",
+]
 
 [tool.ruff]
 target-version = "py312"

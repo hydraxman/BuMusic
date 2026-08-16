@@ -20,6 +20,18 @@ def valid_event(**overrides: object) -> NoteEvent:
     return NoteEvent(**values)  # type: ignore[arg-type]
 
 
+def test_note_event_rejects_inconsistent_pitch_metadata() -> None:
+    with pytest.raises(ValueError, match="pitch_hz.*midi.*cents_offset"):
+        valid_event(pitch_hz=440.0)
+
+
+def test_note_event_rejects_cents_outside_nearest_midi_range() -> None:
+    matching_pitch = 440.0 * 2.0 ** ((60 - 69 + 100.0 / 100.0) / 12.0)
+
+    with pytest.raises(ValueError, match="cents_offset"):
+        valid_event(pitch_hz=matching_pitch, cents_offset=100.0)
+
+
 @pytest.mark.parametrize(
     ("field", "value"),
     [

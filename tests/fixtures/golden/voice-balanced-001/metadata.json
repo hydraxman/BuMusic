@@ -1,0 +1,19 @@
+{
+  "fixture_id": "voice-balanced-001",
+  "description": "User-approved monophonic humming regression fixture",
+  "approval_quote": "这版最接近，很好",
+  "approval_kind": "explicit_listening_preference_for_balanced_fine_version_4",
+  "per_event_manual_pitch_review_claimed": false,
+  "approved_at": "2026-08-15",
+  "approved_for_public_repository_regression_test": true,
+  "audio_sha256": "ee1ab3c8b025df1d92bef02a4085da4bfa9f0ecd00c2dfc2b48dbc4707a40ee2",
+  "expected_notes_sha256": "3f16e68edd92ba2f2e26ea08f4483eae15b8680365af1d63704d6ce70e140710",
+  "bpm": 120.0,
+  "profile": "BALANCED_PROFILE",
+  "expected_note_count": 14,
+  "relative_timing_tolerance_seconds": 0.012,
+  "pitch_tolerance_hz": 0.01,
+  "cents_tolerance": 0.1,
+  "confidence_tolerance": 0.01,
+  "absolute_leading_silence_is_non_blocking": true
+}

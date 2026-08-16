@@ -24,6 +24,7 @@ dist/
 # Generated audio and score artifacts
 bumusic-output/
 .demo/
+.local-artifacts/
 *.wav
 *.mp3
 *.ogg
@@ -34,6 +35,7 @@ bumusic-output/
 *.mxl
 *.svg
 
-# Keep explicitly tracked documentation assets
+# Keep explicitly tracked regression and documentation assets
+!tests/fixtures/golden/**/*.ogg
 !docs/**/*.svg
 !examples/**/*.musicxml
