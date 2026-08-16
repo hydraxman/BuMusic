@@ -26,6 +26,12 @@ def environment_python(environment: Path, *, platform: str = os.name) -> Path:
     return environment / "bin" / "python"
 
 
+def environment_cli(environment: Path, *, platform: str = os.name) -> Path:
+    if platform == "nt":
+        return environment / "Scripts" / "bumusic.exe"
+    return environment / "bin" / "bumusic"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("wheel", nargs="?", type=Path)
@@ -45,6 +51,7 @@ def main() -> None:
         environment = workspace / "venv"
         venv.EnvBuilder(with_pip=True).create(environment)
         python = environment_python(environment)
+        cli = environment_cli(environment)
         subprocess.run([python, "-m", "pip", "install", str(wheel)], check=True)
 
         audio = workspace / "c-major.wav"
@@ -52,9 +59,7 @@ def main() -> None:
         subprocess.run([sys.executable, root / "scripts/generate_demo.py", audio], check=True)
         subprocess.run(
             [
-                python,
-                "-m",
-                "bumusic.cli",
+                cli,
                 "transcribe",
                 audio,
                 "--out",

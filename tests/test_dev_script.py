@@ -28,6 +28,18 @@ def test_wheel_smoke_uses_posix_bin_directory() -> None:
     )
 
 
+def test_wheel_smoke_uses_windows_cli_entrypoint() -> None:
+    assert wheel_smoke.environment_cli(Path("venv"), platform="nt") == Path(
+        "venv/Scripts/bumusic.exe"
+    )
+
+
+def test_wheel_smoke_uses_posix_cli_entrypoint() -> None:
+    assert wheel_smoke.environment_cli(Path("venv"), platform="posix") == Path(
+        "venv/bin/bumusic"
+    )
+
+
 def test_dev_help_runs_with_the_current_python() -> None:
     completed = subprocess.run(
         [sys.executable, "scripts/dev.py", "--help"],

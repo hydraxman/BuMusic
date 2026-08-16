@@ -6,7 +6,7 @@
 
 BuMusic是一个离线的单声部人声转谱工具。它从无伴奏哼唱或唱名中提取音高、起止时间和置信度，输出可编辑的JSON、MusicXML、MIDI和SVG五线谱，并能把识别结果按原始时间反向合成为WAV，方便与原声A/B试听。
 
-> 当前版本面向干净、单人、单声部录音。带伴奏歌曲、和声、合唱和复调转录不在0.1.1支持范围内。
+> 当前版本面向干净、单人、单声部录音。带伴奏歌曲、和声、合唱和复调转录不在0.2.0支持范围内。
 
 ## 能做什么
 
@@ -108,7 +108,7 @@ bumusic-output/
 
 ### 单独反向播放notes.json
 
-macOS或Linux：
+默认`basic`音色。macOS或Linux：
 
 ```bash
 .venv/bin/bumusic synthesize \
@@ -123,6 +123,78 @@ Windows PowerShell：
   bumusic-output\notes.json `
   --output reconstructed.wav
 ```
+
+### 选择钢琴、小提琴或电吉他音色
+
+内置音色均为确定性的离线程序合成，不需要下载采样库：
+
+```bash
+.venv/bin/bumusic transcribe input.wav \
+  --out result \
+  --instrument electric-guitar
+
+.venv/bin/bumusic synthesize result/notes.json \
+  --output piano.wav \
+  --instrument piano
+```
+
+可选音色：
+
+```text
+basic
+piano
+violin
+electric-guitar
+```
+
+这些音色用于快速试听和A/B验证，是轻量合成近似，不等同于专业SoundFont或商业采样库。
+
+### 升降音高和对齐中央C
+
+整体升高一个八度，同时保留原唱音分偏差：
+
+```bash
+.venv/bin/bumusic synthesize result/notes.json \
+  --output octave-up.wav \
+  --instrument piano \
+  --transpose 12
+```
+
+将第一个音移到中央C（C4/MIDI 60），并吸附到十二平均律：
+
+```bash
+.venv/bin/bumusic synthesize result/notes.json \
+  --output middle-c.wav \
+  --instrument piano \
+  --align-middle-c \
+  --snap-to-equal-temperament
+```
+
+### 批量切换目标大调
+
+下面把A大调旋律的第一个A音作为源主音，分别移动到C4、D4和G4；音程、节奏和original timing保持不变：
+
+```bash
+.venv/bin/bumusic synthesize result/notes.json \
+  --output violin.wav \
+  --instrument violin \
+  --source-key A \
+  --target-key C \
+  --target-key D \
+  --target-key G \
+  --target-octave 4 \
+  --snap-to-equal-temperament
+```
+
+输出：
+
+```text
+violin-c-major.wav
+violin-d-major.wav
+violin-g-major.wav
+```
+
+这里的“切换大调”是整体移调：如果输入旋律原本是大调，音程关系会保持为大调；BuMusic不会自动重写和声，也不会把任意小调旋律强制改造成大调。完整语义见[音色与转调说明](docs/INSTRUMENTS_AND_KEYS.md)。
 
 ### 查看版本
 
@@ -183,8 +255,9 @@ BuMusic/
 │   ├── config.py          # 固化的Balanced参数
 │   ├── transcription.py   # pYIN与音符切分
 │   ├── models.py          # NoteEvent数据模型
+│   ├── pitch.py           # 半音转调、中央C和目标大调
 │   ├── export.py          # JSON/MusicXML/MIDI/SVG
-│   └── synthesis.py       # original timing反向合成
+│   └── synthesis.py       # 多音色original timing反向合成
 ├── tests/                 # 参数、识别、导出、合成和CLI测试
 ├── scripts/
 │   ├── dev.py             # Windows/macOS/Linux统一任务入口
@@ -238,8 +311,8 @@ python3 scripts/dev.py build
 产物位于`dist/`：
 
 ```text
-dist/bumusic-0.1.1-py3-none-any.whl
-dist/bumusic-0.1.1.tar.gz
+dist/bumusic-0.2.0-py3-none-any.whl
+dist/bumusic-0.2.0.tar.gz
 ```
 
 macOS/Linux或已安装GNU Make的环境仍可使用Make目标：
@@ -254,6 +327,20 @@ make clean
 ```
 
 GitHub Actions会在Linux、macOS和Windows的Python 3.12/3.13上执行安装、Ruff、pytest、wheel构建，并在各系统的原生默认shell中调用跨平台Python脚本，从干净wheel运行一次真实音阶转录。Windows任务不再借用Bash。
+
+### 真人哼唱黄金回归集
+
+`tests/fixtures/golden/`包含两段经录音者明确选择的原始哼唱及其静态Note JSON回归基线。测试会重新执行Balanced转录，并严格比较音符数量、MIDI/音名序列和谱面时值；Hz、音分、置信度及相对时间使用小范围容差。回归基线用于保护用户选定的产品行为，不声称是逐音人工标注的音乐学绝对真值。
+
+本地单独运行：
+
+```bash
+.venv/bin/python -m pytest -m golden
+```
+
+GitHub Actions在每个操作系统/Python矩阵中将其显示为独立的`Golden humming regression`步骤；任一录音不匹配都会阻止PR通过。
+
+回归基线不会在测试期间自动生成或更新。算法变化导致失败时，必须先试听和审查；只有录音者明确认可新输出后，才能更新基线。完整规则见[`tests/fixtures/golden/README.md`](tests/fixtures/golden/README.md)。
 
 ## Python API
 
