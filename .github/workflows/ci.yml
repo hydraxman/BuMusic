@@ -18,9 +18,9 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.12"
           - os: macos-latest
-            python-version: "3.12"
+            python-version: "3.13"
           - os: windows-latest
-            python-version: "3.12"
+            python-version: "3.13"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
