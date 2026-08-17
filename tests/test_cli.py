@@ -9,6 +9,8 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
+from bumusic import __version__
+
 
 def write_tone(path: Path, frequency: float = 440.0) -> None:
     sample_rate = 22_050
@@ -121,7 +123,7 @@ def test_cli_reports_version() -> None:
         text=True,
     )
     assert completed.returncode == 0
-    assert completed.stdout.strip() == "bumusic 0.2.0"
+    assert completed.stdout.strip() == f"bumusic {__version__}"
 
 
 def test_cli_reports_invalid_notes_json_without_traceback(tmp_path: Path) -> None:

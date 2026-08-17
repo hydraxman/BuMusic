@@ -77,6 +77,8 @@ def build() -> None:
     python = require_venv()
     clean_directories("build", "dist")
     run("-m", "build", python=python)
+    distributions = list((ROOT / "dist").iterdir())
+    run("-m", "twine", "check", "--strict", *distributions, python=python)
     wheels = list((ROOT / "dist").glob("bumusic-*.whl"))
     if len(wheels) != 1:
         raise SystemExit(f"Expected exactly one wheel, found: {wheels}")

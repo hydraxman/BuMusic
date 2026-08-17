@@ -38,9 +38,27 @@ WAV/FLAC/OGG（MP3/M4A取决于系统解码后端）
 
 ### 环境要求
 
-- macOS、Linux或Windows（GitHub Actions持续验证三种系统）；
+- Windows x64、macOS x86_64/arm64或glibc Linux x86_64/aarch64；
 - Python 3.12或3.13；
 - 建议使用虚拟环境，依赖不会写入仓库。
+
+Windows ARM64和Alpine/musl Linux目前不在支持矩阵中，因为Verovio尚未提供对应的预编译wheel。WAV、FLAC和OGG是正式支持的输入格式；MP3取决于安装到本地的libsndfile版本，M4A/AAC不作兼容性保证。
+
+### 从PyPI安装
+
+正式版本发布到PyPI后，CLI用户推荐使用`pipx`，它会为BuMusic创建独立环境：
+
+```bash
+pipx install bumusic
+bumusic --version
+```
+
+也可以安装到现有虚拟环境：
+
+```bash
+python -m pip install bumusic
+bumusic --version
+```
 
 ### 从源码安装
 
@@ -331,7 +349,9 @@ make build
 make clean
 ```
 
-GitHub Actions会在Linux/Python 3.12及macOS、Windows/Python 3.13上执行安装、Ruff、pytest、wheel构建，并在各系统的原生默认shell中调用跨平台Python脚本，从干净wheel运行一次真实音阶转录。Windows任务不再借用Bash。
+GitHub Actions会在Linux、macOS和Windows的Python 3.12/3.13矩阵上执行安装、Ruff、pytest、wheel构建，并在各系统的原生默认shell中调用跨平台Python脚本，从干净wheel运行一次真实音阶转录。Windows任务不再借用Bash。
+
+正式发布使用TestPyPI和PyPI Trusted Publishing，不保存长期上传令牌；发布流程见[`docs/RELEASING.md`](docs/RELEASING.md)。
 
 ### 真人哼唱黄金回归集
 
