@@ -28,7 +28,8 @@ TestPyPI和PyPI下载后的wheel必须与build job artifact的SHA256完全一致
 4. 发布Release；
 5. 等待TestPyPI发布和smoke test通过；
 6. 审批`pypi` Environment deployment；
-7. 等待正式PyPI发布后smoke test通过。
+7. 等待正式PyPI发布后smoke test通过；
+8. workflow会把同一份wheel和sdist附加到GitHub Release。
 
 本地可以预先执行：
 

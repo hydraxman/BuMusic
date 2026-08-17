@@ -125,3 +125,21 @@ jobs:
           --index-url https://pypi.org/simple/
           --expected-wheel
           "dist/bumusic-${{ needs.build.outputs.version }}-py3-none-any.whl"
+
+  attach-release-assets:
+    name: Attach distributions to GitHub Release
+    needs: [build, smoke-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download built distributions
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Upload distributions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" dist/* --clobber
