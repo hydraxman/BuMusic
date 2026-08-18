@@ -65,7 +65,7 @@ def require_matching_wheel(downloaded: Path, expected: Path) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("package", help="exact package requirement, for example bumusic==0.2.0")
+    parser.add_argument("package", help="exact package requirement, for example bumusic==0.2.1")
     parser.add_argument("--index-url", required=True)
     parser.add_argument("--attempts", type=int, default=6)
     parser.add_argument("--delay-seconds", type=float, default=10.0)

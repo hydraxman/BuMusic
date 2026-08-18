@@ -24,7 +24,7 @@ TestPyPI和PyPI下载后的wheel必须与build job artifact的SHA256完全一致
 
 1. 确认`pyproject.toml`中的版本是即将发布的PEP 440版本；
 2. 确认main分支CI全部通过；
-3. 创建GitHub Release，tag必须严格为`v<project.version>`，例如`v0.2.0`；
+3. 创建GitHub Release，tag必须严格为`v<project.version>`，例如`v0.2.1`；
 4. 发布Release；
 5. 等待TestPyPI发布和smoke test通过；
 6. 审批`pypi` Environment deployment；
@@ -37,7 +37,7 @@ TestPyPI和PyPI下载后的wheel必须与build job artifact的SHA256完全一致
 python scripts/dev.py test
 python scripts/dev.py build
 python scripts/wheel_smoke.py
-python scripts/release_version.py v0.2.0
+python scripts/release_version.py v0.2.1
 ```
 
 同一版本不能覆盖上传。发布错误时应发布下一个patch；严重问题先在PyPI yank，

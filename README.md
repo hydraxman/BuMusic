@@ -6,7 +6,7 @@
 
 BuMusic是一个离线的单声部人声转谱工具。它从无伴奏哼唱或唱名中提取音高、起止时间和置信度，输出可编辑的JSON、MusicXML、MIDI和SVG五线谱，并能把识别结果按原始时间反向合成为WAV，方便与原声A/B试听。
 
-> 当前版本面向干净、单人、单声部录音。带伴奏歌曲、和声、合唱和复调转录不在0.2.0支持范围内。
+> 当前版本面向干净、单人、单声部录音。带伴奏歌曲、和声、合唱和复调转录不在0.2.1支持范围内。
 
 ## 能做什么
 
@@ -334,8 +334,8 @@ python3 scripts/dev.py build
 产物位于`dist/`：
 
 ```text
-dist/bumusic-0.2.0-py3-none-any.whl
-dist/bumusic-0.2.0.tar.gz
+dist/bumusic-0.2.1-py3-none-any.whl
+dist/bumusic-0.2.1.tar.gz
 ```
 
 macOS/Linux或已安装GNU Make的环境仍可使用Make目标：

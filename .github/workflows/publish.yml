@@ -31,9 +31,13 @@ jobs:
           version="$(python scripts/release_version.py "$RELEASE_TAG")"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
       - name: Test
-        run: python scripts/dev.py test
+        run: |
+          python -m ruff check src tests scripts
+          python -m pytest
       - name: Build and check distributions
-        run: python scripts/dev.py build
+        run: |
+          python -m build
+          python -m twine check --strict dist/*
       - name: Clean wheel install and real transcription smoke test
         run: python scripts/wheel_smoke.py
       - name: Upload distributions
